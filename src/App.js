@@ -7,7 +7,7 @@ import Countdown from 'react-countdown';
 const axios = require('axios');
 axios.defaults.withCredentials = true;
 
-const BACKEND_BASE_URL = "https://backend-sticky-notes.herokuapp.com/";
+const BACKEND_BASE_URL = "https://backend-sticky-notes.herokuapp.com";
 
 function App() {
   const [notes, setNotes] = React.useState([]);
