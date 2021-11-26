@@ -7,7 +7,7 @@ import Countdown from 'react-countdown';
 const axios = require('axios');
 axios.defaults.withCredentials = true;
 
-const BACKEND_BASE_URL = "https://backend-reactnotes.herokuapp.com";
+const BACKEND_BASE_URL = "https://sc-backend-reactnotes.netlify.app";
 
 function App() {
   const [notes, setNotes] = React.useState([]);
@@ -320,7 +320,7 @@ function Form({navigate, setNotes}) {
         <form onSubmit={handleSubmit} className='flex flex-col items-center'>
           <input className='py-1 px-2 mb-2 border border-gray-400 outline-none' ref={usernameRef} placeholder='username' name="username" required></input>
           <input className='py-1 px-2 mb-2 border border-gray-400 outline-none' type="password" ref={passwordRef} placeholder='password' name="password" required></input>
-          <button className='py-1 px-2 mb-2 border border-gray-400' type='submit'>Login/Register</button>
+          <button className='py-1 px-2 mb-2 outline-none border border-gray-400' type='submit'>Login/Register</button>
         </form>
         <div className='mb-2'>Rememember your password after registration</div>
         {message !== "Wrong password!" ? <span className='text-green-400 font-bold'>{message}</span> : <span className="text-red-500 font-bold">Wrong password!</span>}
