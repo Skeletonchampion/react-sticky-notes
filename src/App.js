@@ -305,6 +305,7 @@ function Form({navigate, setNotes}) {
       });
 
       setMessage(res.data.message);
+      console.log(res.data);
       if(res.data.userId) {
         navigate("/notes");
       }
