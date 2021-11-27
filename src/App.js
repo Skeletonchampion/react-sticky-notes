@@ -14,6 +14,8 @@ function App() {
   const [username, setUsername] = React.useState("");
   const navigate = useNavigate();
 
+  console.log(axios.defaults.withCredentials);
+
   return (
     <div className="App p-2">
       <Routes>
