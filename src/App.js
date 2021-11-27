@@ -37,7 +37,7 @@ function Notes({notes, setNotes, navigate, username, setUsername}) {
     const res = await axios.get(`${BACKEND_BASE_URL}/user`);
 
     if(!res.data.userId) {
-      navigate("/");
+      
     }
     else {
       setUser(true);
