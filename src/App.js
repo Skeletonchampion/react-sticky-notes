@@ -36,7 +36,7 @@ function Notes({notes, setNotes, navigate, username, setUsername}) {
   async function isAuth() {
     const res = await axios.get(`${BACKEND_BASE_URL}/user`);
 
-    console.log(`res: ${res}`, `res.data: ${res.data}`);
+    console.log(`res: ${JSON.stringify(res)}`, `res.data: ${JSON.stringify(res.data)}`);
 
     if(!res.data.userId) {
       navigate("/");
