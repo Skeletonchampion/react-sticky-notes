@@ -29,7 +29,7 @@ function Notes({notes, setNotes, navigate, username, setUsername}) {
   const [user, setUser] = React.useState(false);
   
   React.useEffect(() => {
-    // isAuth();
+    isAuth();
     getNotes();
   }, [notes]);
 
