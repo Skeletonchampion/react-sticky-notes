@@ -188,6 +188,7 @@ function Note({note, notes, setNotes}) {
         <div className='h-1 w-1 mx-[2px] rounded-full bg-black'></div>
         <div className='h-1 w-1 mx-[2px] rounded-full bg-black'></div>
       </div>}
+      <div className='absolute top-0 left-0 z-0 bg-yellow-400 bg-green-400'></div>
     </div>
   )
 }
