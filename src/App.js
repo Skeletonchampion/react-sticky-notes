@@ -14,8 +14,6 @@ function App() {
   const [username, setUsername] = React.useState("");
   const navigate = useNavigate();
 
-  console.log(axios.defaults.withCredentials);
-
   return (
     <div className="App p-2">
       <Routes>
@@ -37,8 +35,6 @@ function Notes({notes, setNotes, navigate, username, setUsername}) {
 
   async function isAuth() {
     const res = await axios.get(`${BACKEND_BASE_URL}/user`);
-
-    console.log(`res: ${JSON.stringify(res)}`, `res.data: ${JSON.stringify(res.data)}`);
 
     if(!res.data.userId) {
       navigate("/");
