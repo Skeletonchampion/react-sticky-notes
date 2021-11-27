@@ -37,7 +37,7 @@ function Notes({notes, setNotes, navigate, username, setUsername}) {
     const res = await axios.get(`${BACKEND_BASE_URL}/user`);
 
     if(!res.data.userId) {
-      
+      navigate("/");
     }
     else {
       setUser(true);
@@ -305,8 +305,9 @@ function Form({navigate, setNotes}) {
       });
 
       setMessage(res.data.message);
-      console.log(res.data);
-      navigate("/notes");
+      if(res.data.userId) {
+        navigate("/notes");
+      }
     }
     catch(err) {
       console.error(err);
