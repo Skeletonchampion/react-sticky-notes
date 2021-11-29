@@ -204,8 +204,8 @@ function New({notes, setNotes}) {
   const [title, setTitle] = React.useState(false);
   const [body, setBody] = React.useState(false);
 
-  const titleRef = React.useRef();
-  const bodyRef = React.useRef();
+  const titleRef = React.useRef("");
+  const bodyRef = React.useRef("");
   const dateRef = React.useRef();
   const timeRef = React.useRef();
   const formRef = React.useRef();
