@@ -239,7 +239,7 @@ function New({notes, setNotes}) {
 
         const res = await axios.post(`${BACKEND_BASE_URL}/notes/new`, {
           title: titleRef.current.value,
-          body: bodyRef.current.value,
+          body: bodyRef.current ? bodyRef.current.value : "",
           date: date,
           noteId: uniqid(),
           ts: ts,
@@ -299,7 +299,8 @@ function New({notes, setNotes}) {
                 if(!bodyRef.current.value) {
                   setBody(false);
                 }
-              }} autoFocus
+              }}
+              autoFocus
               cols="30"
               rows="4"
               name="body">
