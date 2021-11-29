@@ -217,7 +217,7 @@ function New({notes, setNotes}) {
     e.preventDefault();
     try {
         if(!startDate) return;
-        const [month, day, year] = [startDate.getMonth(), startDate.getDate(), startDate.getFullYear()];
+        const [month, day, year] = [startDate.getMonth()+1, startDate.getDate(), startDate.getFullYear()];
         [hour, minute] = timeRef.current.value.split(":");
         if(hour == undefined || minute == undefined) {
           hour = "00";
