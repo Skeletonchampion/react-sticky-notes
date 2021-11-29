@@ -4,6 +4,12 @@ import { useNavigate, Routes, Route } from "react-router-dom";
 import uniqid from "uniqid";
 import {DateTime} from "luxon";
 import Countdown from 'react-countdown';
+import DatePicker from 'react-datepicker';
+
+import loadingGif from "./images/Spinner-1s-200px.svg";
+import next from "./images/icons8-next-50.png";
+import previous from "./images/icons8-previous-50.png";
+
 const axios = require('axios');
 axios.defaults.withCredentials = true;
 
@@ -68,11 +74,11 @@ function Notes({notes, setNotes, navigate, username, setUsername}) {
     <>
       {user 
         ? 
-        <div className='min-w-screen grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className='min-w-screen pb-[160px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {notes.map(note => (
             <Note key={note.noteId} note={note} notes={notes} setNotes={setNotes}/>
           ))}
-          <div className='fixed bottom-2 left-2'>
+          <div className='w-full bg-white fixed bottom-0 left-0 right-0 z-50'>
             <div className='inline-block mr-4 text-lg font-bold text-red-400'>Username: {username}</div>
             <button className='outline-none p-2 bg-gray-400' onClick={handleLogout}>Logout</button>
           </div>
@@ -157,27 +163,27 @@ function Note({note, notes, setNotes}) {
       {colorForm 
       ? 
       <div className="flex py-1 absolute bottom-0 left-1">
-        <label htmlFor={`${note.noteId}${colors[0]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-${colors[0]}-400 transform hover:scale-105 cursor-pointer`}></label>
+        <label htmlFor={`${note.noteId}${colors[0]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-red-400 transform hover:scale-105 cursor-pointer`}></label>
         <input className="hidden" onClick={(e) => {
           handleChangeColor(e.target.value)
         }} type="radio" name="color" id={`${note.noteId}${colors[0]}`} value={`${colors[0]}`}></input>
       
-        <label htmlFor={`${note.noteId}${colors[1]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-${colors[1]}-400 transform hover:scale-105 cursor-pointer`}></label>
+        <label htmlFor={`${note.noteId}${colors[1]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-yellow-400 transform hover:scale-105 cursor-pointer`}></label>
         <input className="hidden" onClick={(e) => {
           handleChangeColor(e.target.value);
         }} type="radio" name="color" id={`${note.noteId}${colors[1]}`} value={`${colors[1]}`}></input>
 
-        <label htmlFor={`${note.noteId}${colors[2]}`} className={`inline-bl ock w-8 h-8 border border-black rounded-full mr-2 bg-${colors[2]}-400 transform hover:scale-105 cursor-pointer`}></label>
+        <label htmlFor={`${note.noteId}${colors[2]}`} className={`inline-bl ock w-8 h-8 border border-black rounded-full mr-2 bg-blue-400 transform hover:scale-105 cursor-pointer`}></label>
         <input className="hidden" onClick={(e) => {
           handleChangeColor(e.target.value);
         }} type="radio" name="color" id={`${note.noteId}${colors[2]}`} value={`${colors[2]}`}></input>
 
-        <label htmlFor={`${note.noteId}${colors[3]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-${colors[3]}-400 transform hover:scale-105 cursor-pointer`}></label>
+        <label htmlFor={`${note.noteId}${colors[3]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-green-400 transform hover:scale-105 cursor-pointer`}></label>
         <input className="hidden" onClick={(e) => {
           handleChangeColor(e.target.value);
         }} type="radio" name="color" id={`${note.noteId}${colors[3]}`} value={`${colors[3]}`}></input>
 
-        <label htmlFor={`${note.noteId}${colors[4]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-${colors[4]}-400 transform hover:scale-105 cursor-pointer`}></label>
+        <label htmlFor={`${note.noteId}${colors[4]}`} className={`inline-block w-8 h-8 border border-black rounded-full mr-2 bg-purple-400 transform hover:scale-105 cursor-pointer`}></label>
         <input className="hidden" onClick={(e) => {
           handleChangeColor(e.target.value);
         }} type="radio" name="color" id={`${note.noteId}${colors[4]}`} value={`${colors[4]}`}></input>
@@ -195,30 +201,41 @@ function Note({note, notes, setNotes}) {
 
 function New({notes, setNotes}) {
   const [form, setForm] = React.useState(false);
+  const [title, setTitle] = React.useState(false);
+  const [body, setBody] = React.useState(false);
+
   const titleRef = React.useRef();
   const bodyRef = React.useRef();
-  const [hour, setHour] = React.useState(0);
-  const [minute, setMinute] = React.useState(0);
   const dateRef = React.useRef();
+  const timeRef = React.useRef();
   const formRef = React.useRef();
+  const [startDate, setStartDate] = React.useState(new Date());
+
+  let hour, minute;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-        const dateInput = DateTime.fromISO(dateRef.current.value).toFormat("yyyy-MM-dd");
-        const dateObject = DateTime.fromISO(dateRef.current.value);
+        if(!startDate) return;
+        const [month, day, year] = [startDate.getMonth(), startDate.getDate(), startDate.getFullYear()];
+        [hour, minute] = timeRef.current.value.split(":");
+        if(hour == undefined || minute == undefined) {
+          hour = "00";
+          minute = "00";
+        }
+        const dateInput = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+        const timeInput = `${hour}:${minute}:00`;
 
-        // let [hour, minute] = [hourRef.current.value, minuteRef.current.value];
-        // if(hour < 10) hour = `0${hour}`;
-        // if(minute < 10) minute = `0${minute}`;
-        const timeInput = DateTime.fromISO(`${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}:00`).toFormat("HH:mm:ss");
+        hour = parseInt(hour);
+        minute = parseInt(minute);
 
         const date = `${dateInput} ${timeInput}`;
 
-        const tsDate = (dateObject.c.year*365*24*60*60) + (dateObject.c.month*30*24*60*60) + (dateObject.c.day*24*60*60);
+        const tsDate = (year*365*24*60*60) + (month*30*24*60*60) + (day*24*60*60);
         const tsTime = (hour*60*60) + (minute*60);
         const ts = tsDate + tsTime;
+
+        setForm(false);
 
         const res = await axios.post(`${BACKEND_BASE_URL}/notes/new`, {
           title: titleRef.current.value,
@@ -227,8 +244,6 @@ function New({notes, setNotes}) {
           noteId: uniqid(),
           ts: ts,
         });
-
-        setForm(!form);
 
         const sortedNotes = [...notes, res.data];
         sortedNotes.sort((a, b) => {
@@ -244,60 +259,93 @@ function New({notes, setNotes}) {
 
   return (
     <>
-      <div onClick={() => setForm(!form)} className='w-[100px] h-[100px] bg-blue-400 flex flex-col justify-center items-center rounded-full fixed bottom-4 right-4 cursor-pointer'>
-        <img className='w-[50px] h-[50px]' src="https://img.icons8.com/ios/50/000000/create-order--v1.png" alt='new-notes.icon'/>
-        <div className='font-bold text-lg'>New</div>
-      </div>
-      {form && 
-      <div ref={formRef} className='absolute z-10 bg-white top-10 left-[50%] transform translate-x-[-50%]'>
-        <form className='relative flex flex-col' onSubmit={handleSubmit}>
-          {/* <div onClick={() => setForm(!form)} className='w-6 h-6 absolute top-0 right-0 cursor-pointer'>
-            <img src="https://img.icons8.com/emoji/48/000000/cross-mark-emoji.png" alt="cross.icon"/>
-          </div> */}
-          <input
-            ref={titleRef}
-            className='px-2 py-1 bg-gray-300 rounded-sm outline-none'
-            placeholder='Title' name='title'
-            required></input>
-          <textarea ref={bodyRef}
-            className="mb-2 px-2 py-1 bg-gray-300 rounded-sm outline-none resize-none"
-            placeholder='Your description...'
-            cols="30"
-            rows="4"
-            name="body"></textarea>
-          <div className='mb-2 flex flex-col text-center'>
-            <input defaultValue="0" className='appearance-none outline-none mb-3 cursor-pointer bg-purple-400 h-1 rounded-full mx-1' onChange={(e) => setHour(e.target.value)} type="range" steps="1" min="0" max="23" name="hour" required></input>
-            <input defaultValue="0" className='appearance-none outline-none cursor-pointer bg-purple-400 h-1 rounded-full mx-1' onChange={(e) => setMinute(e.target.value)} type="range" step="1" min="0" max="59" name="minute" required></input>
-            <div>{hour >= 10 ? hour : `0${hour}`}h:{minute >= 10 ? minute : `0${minute}`}m</div>
+      <div id="new" className='relative mr-2 mb-2 min-h-[150px] border border-dashed border-gray-400 shadow-sm'>
+        {form
+        ?
+        <div id="hidden" className='px-2 pt-2 pb-4 relative flex flex-col'>
+          <div className='mb-1 opacity-100 flex flex-col border-black border-b'>
+            {!title
+            ?
+            <h1
+              onClick={() => {
+                setTitle(true);
+              }}
+              className='mb-2 mr-4 font-bold text-lg whitespace-normal break-words'>title</h1>
+            :
+            <input
+              ref={titleRef} autoFocus
+              className='px-2 py-1 rounded-sm outline-none'
+              name='title'
+              placeholder='Title is required'
+              onBlur={(e) => {
+                if(!titleRef.current.value) {
+                  setTitle(false);
+                }
+              }}
+              required>
+            </input>}
+            {!body
+            ?
+            <div 
+              onClick={() => {
+                setBody(true);
+              }}
+              className='mb-3 whitespace-normal break-words'>description
+            </div>
+            :
+            <textarea ref={bodyRef}
+              className="mb-2 px-2 py-1 rounded-sm outline-none resize-none"
+              onBlur={() => {
+                if(!bodyRef.current.value) {
+                  setBody(false);
+                }
+              }} autoFocus
+              cols="30"
+              rows="4"
+              name="body">
+            </textarea>}
           </div>
-          <input
-            className='mb-2 px-2 py-1 outline-none text-center'
-            ref={dateRef}
-            type="date"
-            name="date"
-            required
-            onKeyDown={(e) => e.preventDefault()}
-            
-            ></input>
-          <button className='px-2 py-1 bg-blue-400 hover:bg-blue-500' type="submit">Create</button>
-          <button className='px-2 py-1 bg-red-400 hover:bg-red-500' onClick={(e) => {
-            e.preventDefault();
-            setForm(!form);
-          }}>Cancel</button>
-        </form>
-      </div>}
+          <div className='opacity-100 flex justify-between mb-4'>
+            <div>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                withPortal
+                placeholderText='Date is required'
+              />
+              <div className='mt-2'>
+                <input ref={timeRef} required defaultValue="14:07" name="time" className='border border-gray-400 px-2 py-1' type="time"></input>
+              </div>
+            </div>
+          </div>
+          <div className='flex'>
+            <button
+              className='px-2 py-1 mr-2 outline-none border border-gray-400 hover:bg-yellow-500'
+              onClick={() => setForm(false)}>
+              Hide
+            </button>
+            <button
+              className='px-2 py-1 outline-none border border-gray-400 hover:bg-green-400' onClick={handleSubmit}>Create</button>
+          </div>
+        </div>
+        :
+        <button className='absolute bottom-2 left-2 px-2 py-1 border hover:border-gray-400' onClick={() => setForm(true)}>New</button>}
+      </div>
     </>
   ) 
 }
 
 function Form({navigate, setNotes}) {
   const [message, setMessage] = React.useState("");
-  const usernameRef = React.useRef();
-  const passwordRef = React.useRef();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const usernameRef = React.useRef("");
+  const passwordRef = React.useRef("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!usernameRef.current.value || !passwordRef.current.value) return setMessage("Please enter your username and password!");
     try {
+      setIsLoading(true);
       setNotes([]);
       setMessage("");
       const res = await axios.post(`${BACKEND_BASE_URL}/login`, {
@@ -305,6 +353,7 @@ function Form({navigate, setNotes}) {
         password: passwordRef.current.value,
       });
 
+      setIsLoading(false);
       setMessage(res.data.message);
       if(res.data.userId) {
         navigate("/notes");
@@ -316,15 +365,42 @@ function Form({navigate, setNotes}) {
   }
 
   return (
-    <div className='flex justify-center'>
-      <div className='mt-6 py-6 px-5 h-60 border border-gray-400 border-dashed flex flex-col items-center'>
-        <form onSubmit={handleSubmit} className='flex flex-col items-center'>
-          <input className='py-1 px-2 mb-2 border border-gray-400 outline-none' ref={usernameRef} placeholder='username' name="username" required></input>
-          <input className='py-1 px-2 mb-2 border border-gray-400 outline-none' type="password" ref={passwordRef} placeholder='password' name="password" required></input>
-          <button className='py-1 px-2 mb-2 outline-none border border-gray-400' type='submit'>Login/Register</button>
+    <div className='text-center flex justify-center'>
+      <div className='mt-6 py-6 px-5 flex flex-col items-center'>
+      <div className='mb-4'>Welcome to my react-notes!</div>
+        <form onSubmit={handleSubmit} className='mb-4 w-64 flex flex-col'>
+          <input className='py-1 px-2 w-full mb-2 border border-gray-400 outline-none' ref={usernameRef} placeholder='username' name="username"></input>
+          <input className='py-1 px-2 w-full mb-8 border border-gray-400 outline-none' type="password" ref={passwordRef} placeholder='password' name="password"></input>
+          <button
+            className='py-1 px-2 mb-2 outline-none border border-gray-400 bg-green-400 hover:bg-green-300' type='submit'
+            >
+          Login/Register
+          </button>
         </form>
-        <div className='mb-2'>Rememember your password after registration</div>
-        {message !== "Wrong password!" ? <span className='text-green-400 font-bold'>{message}</span> : <span className="text-red-500 font-bold">Wrong password!</span>}
+        <div className="flex-grow">
+          {message
+          ?
+          (message === "Wrong password!"
+            ?
+            <span className="text-red-500 font-bold">{message}</span>
+            :
+            message === "Please enter your username and password!"
+              ?
+              <span className='text-red-500 font-bold'>{message}</span>
+              :
+              <span className='text-green-400 font-bold'>{message}</span>)
+          :
+          ""
+          }
+          {isLoading
+          ?
+          <div className='w-8 h-8 md:w-10 md:h-10'>
+            <img src={loadingGif} alt="loading.icon"></img>
+          </div>
+          :
+          ""
+          }
+        </div>
       </div>
     </div>
   );
