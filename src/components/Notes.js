@@ -59,7 +59,7 @@ export default function Notes({notes, setNotes, navigate, username, setUsername}
       <>
         {user 
           ? 
-          <div className=''>
+          <div className='pb-[150px]'>
             {/* {notes.map(note => (
               <Note key={note.noteId} note={note} notes={notes} setNotes={setNotes} getNotes={getNotes}/>
             ))} */}
