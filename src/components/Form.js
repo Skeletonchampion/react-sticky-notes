@@ -67,8 +67,9 @@ export default function Form({navigate, setNotes}) {
             }
             {isLoading
             ?
-            <div className='w-8 h-8 md:w-10 md:h-10'>
-              <img src={loadingGif} alt="loading.icon"></img>
+            <div className='flex flex-col items-center'>
+              <img className='w-8 h-8 md:w-10 md:h-10' src={loadingGif} alt="loading.icon"></img>
+              <span>This will take a while</span>
             </div>
             :
             ""
